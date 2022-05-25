@@ -10,7 +10,6 @@ export const uploadReducer = (uploadState, action) => {
                     dislikes: uploadState.status === 'dislike' ? uploadState.dislikes -1 : uploadState.dislikes,            
                     status: uploadState.status === null ? 'dislike' : 'like',
                 }
-            console.log(newState);
             return newState;
         }
         case 'UPDATED_DISLIKE': {
@@ -19,7 +18,6 @@ export const uploadReducer = (uploadState, action) => {
                     likes: uploadState.status === 'like' ? uploadState.likes -1 : uploadState.likes,
                     status: uploadState.status === null ? 'like' : 'dislike',
                 } 
-                console.log(newState);
             return newState;
         }
         default:
