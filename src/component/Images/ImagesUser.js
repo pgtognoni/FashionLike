@@ -9,8 +9,35 @@ const uploadRedux = uploadReducer;
 
 export default function UserImages  () {
   
-  const [ isLoading, setIsLoading ] = useState(false);
   const [ arr, setArr ] = useState([]);
+  
+  const initialState = arr.map((image) => ({
+    id: image._id,
+    title: image.title,
+    src: image.file,
+    likes: image.likes,
+    dislikes: image.dislikes,
+    description: image.description,
+    status: image.status,
+  }));
+  
+  const uploadIniState = initialState;
+  
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [ uploadState, uploadDispatch ] = useReducer(uploadRedux, uploadIniState);
+
+  useEffect(() => {
+    
+    const getArr = () => {
+        if (state) {
+          setArr(state);
+        } else {
+          console.log("error")
+    }}
+      
+    getArr();
+  }, [state])
 
   useEffect(() => {
     
@@ -41,7 +68,26 @@ export default function UserImages  () {
     getData();
       
   }, []);
-      
+  
+  useEffect(() => {
+    
+    const uploadObj = () => {
+      if(uploadState){
+        axios
+        .put("http://localhost:3977/posteo/edit", uploadState)
+        .then(res => (
+          console.log(res)
+        ))
+        .catch(err => {
+            console.log(err);
+        })
+
+      }
+    }
+
+    uploadObj()
+
+  },[uploadState])
   
   if (isLoading) {
     return (
@@ -50,32 +96,7 @@ export default function UserImages  () {
   }
     
     
-  const initialState = arr.map((image) => ({
-    id: image._id,
-    title: image.title,
-    src: image.file,
-    likes: image.likes,
-    dislikes: image.dislikes,
-    description: image.description,
-    status: image.status,
-  }));
-  
-  const uploadIniState = initialState;
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [ uploadState, uploadDispatch ] = useReducer(uploadRedux, uploadIniState);
-
-  useEffect(() => {
-    
-    const getArr = () => {
-        if (state) {
-          setArr(state);
-        } else {
-          console.log("error")
-    }}
-      
-    getArr();
-  }, [state])
 
   const handleClickLike = (imageId, index) => {
     let newA = [...arr];
@@ -122,26 +143,6 @@ export default function UserImages  () {
     })
     
   };
-
-  useEffect(() => {
-    
-    const uploadObj = () => {
-      if(uploadState){
-        axios
-        .put("http://localhost:3977/posteo/edit", uploadState)
-        .then(res => (
-          console.log(res)
-        ))
-        .catch(err => {
-            console.log(err);
-        })
-
-      }
-    }
-
-    uploadObj()
-
-  },[uploadState])
 
   const getImageInfoStatus = (imageId) => {
     if(initialState){

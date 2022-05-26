@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { FaPencilAlt, FaTrashAlt, FaAngleDoubleRight, FaFileUpload } from "react-icons/fa"
 import { RiCheckFill, RiCloseFill } from "react-icons/ri";
 import { ImageUpload } from "./imagesUpload";
@@ -13,6 +13,25 @@ const AdminImages = () => {
     const [ isLoading, setIsLoading ] = useState(false);
     const [ arra, setArr ] = useState([]);
     const [ arr, setArri ] = useState([]);
+    const [ activeIndex, setActiveIndex ] = useState(null)
+
+    const [ isInputActive, setIsInputActive ] = useState(false);
+
+    const [ storedTitle, setNewTitle ] = useState();
+
+    const [ storedDescription, setNewDescription ] = useState();
+
+    const [ inputTitle, setInputTitle ] = useState("");
+
+    const [ inputDescription, setInputDescription ] = useState("");
+
+    const [ openModal, setOpenModal ] = useState(false); 
+
+    const [ uploadImage, setUploadImage ] = useState(false); 
+
+    useKeypress('Escape', () => {
+        setIsInputActive(false);
+    })
 
     useEffect(() => {
 
@@ -57,22 +76,6 @@ const AdminImages = () => {
         )
     }
 
-    const [ activeIndex, setActiveIndex ] = useState(null)
-
-    const [ isInputActive, setIsInputActive ] = useState(false);
-
-    const [ storedTitle, setNewTitle ] = useState();
-
-    const [ storedDescription, setNewDescription ] = useState();
-
-    const [ inputTitle, setInputTitle ] = useState("");
-
-    const [ inputDescription, setInputDescription ] = useState("");
-
-    const [ openModal, setOpenModal ] = useState(false); 
-
-    const [ uploadImage, setUploadImage ] = useState(false); 
-
     const handleModal = () => {
         setOpenModal(true);
         setUploadImage(true);
@@ -91,9 +94,6 @@ const AdminImages = () => {
         setActiveIndex(i)
     }
 
-    useKeypress('Escape', () => {
-        setIsInputActive(false);
-    })
 
     const handleCancelEditing = (index) => {
         let newA = [...arr];
