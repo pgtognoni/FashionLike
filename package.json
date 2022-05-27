@@ -22,7 +22,8 @@
     "start": "npm start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "NON eject"
+    "eject": "NON eject",
+    "heroku-postbuild": "echo Skip build on Heroku"
   },
   "eslintConfig": {
     "extends": [
@@ -41,5 +42,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "heroku-run-build-script": true
 }
