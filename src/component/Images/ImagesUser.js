@@ -72,7 +72,7 @@ export default function UserImages  () {
   useEffect(() => {
     
     const uploadObj = () => {
-      if(uploadState){
+      if(uploadState != null){
         axios
         .put("http://localhost:3977/posteo/edit", uploadState)
         .then(res => (
