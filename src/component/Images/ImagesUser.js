@@ -1,8 +1,10 @@
 import React, { useReducer, useState, useEffect } from "react";
-import { FaThumbsDown, FaThumbsUp, FaAngleDoubleRight } from "react-icons/fa"
+import { FaAngleDoubleRight } from "react-icons/fa"
 import { likesReducer } from "./ImagesReducer";
 import { uploadReducer } from "./UploadReducer";
 import axios from "axios";
+import { UserStatus } from "./ImageStatus";
+import ImagesSrc from "./ImagesSrc";
 
 const reducer = likesReducer; 
 const uploadRedux = uploadReducer;
@@ -26,6 +28,7 @@ export default function UserImages  () {
   const [ isLoading, setIsLoading ] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [ uploadState, uploadDispatch ] = useReducer(uploadRedux, uploadIniState);
+  const [ upload, setUpload ] = useState(false);
 
   useEffect(() => {
     
@@ -72,7 +75,7 @@ export default function UserImages  () {
   useEffect(() => {
     
     const uploadObj = () => {
-      if(uploadState != null){
+      if(upload === true){
         axios
         .put("http://localhost:3977/posteo/edit", uploadState)
         .then(res => (
@@ -81,24 +84,24 @@ export default function UserImages  () {
         .catch(err => {
             console.log(err);
         })
+        .finally(
+          setUpload(false)
+        )
 
       }
     }
 
     uploadObj()
 
-  },[uploadState])
+  },[upload, uploadState])
   
   if (isLoading) {
     return (
       <div>Cargando datos...</div>
       )
   }
-    
-    
 
-
-  const handleClickLike = (imageId, index) => {
+  const handleClickLike = async (imageId, index) => {
     let newA = [...arr];
     let obj = newA[index];
     uploadDispatch({
@@ -107,17 +110,15 @@ export default function UserImages  () {
     });
     dispatch({
       type: 'HANDLE_LIKE',
-      payload:{ 
+      payload: {
         id: imageId,
       },
     });
     uploadDispatch({
       type: 'UPDATED_LIKE',
-      payload:{ 
-        id: imageId,
-        index: index,
       }, 
-    });
+    );
+    setUpload(true)
   }
       
   const handleClickDislike = (imageId, index) =>{ 
@@ -133,15 +134,11 @@ export default function UserImages  () {
         id: imageId,
         index: index,
       },
-    })
+    });
     uploadDispatch({
       type: 'UPDATED_DISLIKE',
-      payload:{ 
-        id: imageId,
-        index: index,
-      }, 
-    })
-    
+    });
+    setUpload(true);
   };
 
   const getImageInfoStatus = (imageId) => {
@@ -149,8 +146,6 @@ export default function UserImages  () {
     const imageState = initialState.find((s) => (s.id === imageId));
     return {
       imageStatus: imageState.status,
-      imageLikes: imageState.likes,
-      imageDislikes: imageState.dislikes,
     };}
   };
 
@@ -159,35 +154,29 @@ export default function UserImages  () {
       <ul className="img-ul">
         <div className="bg-container">
           {initialState && initialState.map((img, index) => {
-          const { imageLikes, imageDislikes, imageStatus } = getImageInfoStatus(img.id);
+          const { imageStatus } = getImageInfoStatus(img.id);
           return (
             <div key={img.id} className="bg-image-container">
               <li>
                 <div className="image-title"><FaAngleDoubleRight className="angleRight"/>{img.title}</div>
-                <div>
-                  <img src={img.src} alt={img.title} className="images"/>
-                </div>
+                <ImagesSrc 
+                  imgSrc = {img.src}
+                  imgTitle = {img.title}
+                />
                 <div>
                   <p className="description">{img.description}</p>
                 </div>
-                <div className="img-btn">
-                  <button 
-                    type="button"
-                    className={`bg-btn ${imageStatus ==='like'? 'btn active' : 'btn'}`} 
-                    onClick={()=> handleClickLike(img.id, index)}
-                  >
-                    <FaThumbsUp/>
-                    <span className="btn-text">{imageLikes}</span>
-                  </button>
-                  <button 
-                    type="button"
-                    className={`bg-btn ${imageStatus ==='dislike'? 'btn active' : 'btn'}`} 
-                    onClick={()=> handleClickDislike(img.id, index)}
-                  >
-                    <FaThumbsDown/>
-                    <span className="btn-text">{imageDislikes}</span>
-                  </button>
-                </div>                      
+                <div>
+                  <UserStatus 
+                    imgId={img.id}
+                    initialState={initialState} 
+                    handleClickDislike={() => handleClickDislike(img.id, index)}
+                    handleClickLike={() => handleClickLike(img.id, index)}
+                    imageLikes={img.likes} 
+                    imageDislikes={img.dislikes}
+                    imageStatus={imageStatus}
+                  />
+                </div>
               </li>
             </div>      
           )})}  

@@ -6,7 +6,7 @@ import useKeypress from "react-use-keypress";
 import EditTitle from "./ImageEditTitle";
 import EditDescription from "./ImageEditDescription";
 import axios from "axios";
-// import { images } from "../../static";
+import ImagesSrc from "./ImagesSrc";
 
 const AdminImages = () => {
 
@@ -139,11 +139,6 @@ const AdminImages = () => {
         .catch(err => 
             console.log(err)
             );
-
-        // const imgId = id;
-        // console.log(imgId);
-        // const newArr = arr.filter(item => item.id !== imgId);
-        // setArr(newArr);
         window.location.reload();
     }
         
@@ -178,9 +173,10 @@ const AdminImages = () => {
                                     />
                                 </span>
                             </div>
-                            <div>
-                                <img src={img.file} alt={img.title} className="images"/>
-                            </div>
+                            <ImagesSrc 
+                                imgSrc = {img.file}
+                                imgTitle = {img.title}
+                            />
                             <div>
                                 <p className="description">
                                     <EditDescription 

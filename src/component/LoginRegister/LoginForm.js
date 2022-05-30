@@ -54,7 +54,7 @@ const LoginForm = () => {
                 navigate("/");
             }
             window.location.reload()
-        },1000)
+        },500)
     }
 
     return (
