@@ -39,8 +39,6 @@ const LoginForm = () => {
             });
 
             
-        setTimeout(() => {
-            
             const userLogged = localStorage.getItem("role")
             const userRole = JSON.parse(userLogged)
             
@@ -54,7 +52,9 @@ const LoginForm = () => {
                 navigate("/");
             }
             window.location.reload()
-        },500)
+        // setTimeout(() => {
+            
+        // },500)
     }
 
     return (

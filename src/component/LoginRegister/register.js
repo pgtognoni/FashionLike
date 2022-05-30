@@ -35,8 +35,6 @@ const RegisterForm = () => {
                 console.log(err);
             });
 
-        setTimeout(() => {
-            
             const userLogged = localStorage.getItem("role")
         
             if(userLogged){
@@ -47,8 +45,11 @@ const RegisterForm = () => {
             }
 
             window.location.reload();
+            
+        // setTimeout(() => {
+            
 
-        },500)    
+        // },500)    
         
     }
 
